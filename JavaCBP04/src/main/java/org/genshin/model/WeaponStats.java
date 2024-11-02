@@ -1,13 +1,13 @@
 package org.genshin.model;
 
 public class WeaponStats {
-    public WeaponStats(String appendPropId, double statValue) {
+    public WeaponStats(String appendPropId, Double statValue) {
         this.appendPropId = appendPropId;
         this.statValue = statValue;
     }
 
     private String appendPropId;
-    private double statValue;
+    private Double statValue;
 
     public String getAppendPropId() {
         return appendPropId;

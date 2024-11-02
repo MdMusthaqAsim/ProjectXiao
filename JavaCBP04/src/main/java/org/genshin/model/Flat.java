@@ -3,17 +3,29 @@ package org.genshin.model;
 import java.util.ArrayList;
 
 public class Flat {
-    public Flat(String nameTextMapHash, Integer rankLevel, String itemType, String icon, String equipType, String setNameTextMapHash, ArrayList<WeaponStats> weaponStats, ArrayList<ReliquarySubstats> reliquarySubstats, ReliquaryMainstat reliquaryMainstat) {
+    public Flat(ArrayList<ReliquarySubstats> reliquarySubstats, ReliquaryMainstat reliquaryMainstat, String nameTextMapHash, Integer rankLevel, String itemType, String icon, String equipType, String setNameTextMapHash) {
         this.nameTextMapHash = nameTextMapHash;
         this.rankLevel = rankLevel;
         this.itemType = itemType;
         this.icon = icon;
         this.equipType = equipType;
         this.setNameTextMapHash = setNameTextMapHash;
-        this.weaponStats = weaponStats;
+        this.weaponStats = null;
         this.reliquarySubstats = reliquarySubstats;
         this.reliquaryMainstat = reliquaryMainstat;
-    }
+    }//reliq constructor
+
+    public Flat(ArrayList<WeaponStats> weaponStats, String nameTextMapHash, Integer rankLevel, String itemType, String icon) {
+        this.nameTextMapHash = nameTextMapHash;
+        this.rankLevel = rankLevel;
+        this.itemType = itemType;
+        this.icon = icon;
+        this.equipType = null;
+        this.setNameTextMapHash = null;
+        this.weaponStats = weaponStats;
+        this.reliquarySubstats = null;
+        this.reliquaryMainstat = null;
+    }//wep constructor
 
     private String nameTextMapHash;
     private Integer rankLevel;
