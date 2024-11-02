@@ -1,21 +1,21 @@
 package org.genshin.model;
 
 public class PropMap {
-    public PropMap(int type, String ival, String val) {
+    public PropMap(Integer type, String ival, String val) {
         this.type = type;
         this.ival = ival;
         this.val = val;
     }
 
-    private int type;
+    private Integer type;
     private String ival;
     private String val;
 
-    public int getType() {
+    public Integer getType() {
         return type;
     }
 
-    public void setType(int type) {
+    public void setType(Integer type) {
         this.type = type;
     }
 

@@ -14,10 +14,10 @@ public class AvatarInfoList {
         this.fetterInfo = fetterInfo;
     }
 
-    private int avatarId;
+    private Integer avatarId;
     private Map<Integer, PropMap> propMap;
     private Map<Integer, Double> fightPropMap;
-    private int skillDepotId;
+    private Integer skillDepotId;
     private ArrayList<Integer> inherentProudSkillList;
     private Map<Integer, Integer> skillLevelMap;
     private ArrayList<EquipList> equipList;

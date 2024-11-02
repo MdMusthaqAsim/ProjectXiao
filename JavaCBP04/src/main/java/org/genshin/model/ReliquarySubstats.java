@@ -1,13 +1,13 @@
 package org.genshin.model;
 
 public class ReliquarySubstats {
-    public ReliquarySubstats(String appendPropId, double statValue) {
+    public ReliquarySubstats(String appendPropId, Double statValue) {
         this.appendPropId = appendPropId;
         this.statValue = statValue;
     }
 
     private String appendPropId;
-    private double statValue;
+    private Double statValue;
 
     public String getAppendPropId() {
         return appendPropId;
@@ -17,11 +17,11 @@ public class ReliquarySubstats {
         this.appendPropId = appendPropId;
     }
 
-    public double getStatValue() {
+    public Double getStatValue() {
         return statValue;
     }
 
-    public void setStatValue(double statValue) {
+    public void setStatValue(Double statValue) {
         this.statValue = statValue;
     }
 }
