@@ -1,6 +1,5 @@
 package org.genshin.mapper;
 
-import com.fasterxml.jackson.databind.AbstractTypeResolver;
 import org.genshin.model.*;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.io.*;
@@ -14,11 +13,11 @@ public class Mapper {
         try {
             Map<String, Object> map = (Map<String, Object>) objectMapper.readValue(new File(path), Map.class);
 
-            PlayerInfo playerInfo = playerInfoMapper(map);
-            ArrayList<AvatarInfoList> avatarInfoList = avatarInfoListMapper(map);
+            PlayerInfo playerInfo = ((map.get("playerInfo") == null)?(null):(playerInfoMapper(map)));
+            ArrayList<AvatarInfoList> avatarInfoList = ((map.get("avatarInfoList") == null)?(null):(avatarInfoListMapper(map)));
             int ttl = (int) map.get("ttl");
             String uid = (String) map.get("uid");
-            Owner owner = ownerMapper(map);
+            Owner owner = ((map.get("owner") == null)?(null):(ownerMapper(map))); //(()?():());
 
             user = new User(playerInfo, avatarInfoList, ttl, uid, owner);
 
@@ -174,6 +173,9 @@ public class Mapper {
     }
 
     private static Map<Integer, Integer> affixMapMapper(Map<String, Object> weaponItem) {
+        if((Map<String, Integer>) weaponItem.get("affixMap") == null){
+            return null;
+        }
         Map<String, Integer> affixMapItem = (Map<String, Integer>) weaponItem.get("affixMap");
         Map<Integer, Integer> affixMap = new HashMap<>();
         for(String key : affixMapItem.keySet()){
@@ -238,22 +240,22 @@ public class Mapper {
     private static PlayerInfo playerInfoMapper(Map<String, Object> map) {
         Map<String, Object> playerInfo = (Map<String, Object>) map.get("playerInfo");
         String nickname = (String) playerInfo.get("nickname");
-        int level = (int) playerInfo.get("level");
+        Integer level = (Integer) playerInfo.get("level");
         String signature = (String) playerInfo.get("signature");
-        int worldLevel = (int) playerInfo.get("worldLevel");
-        int nameCardId = (int) playerInfo.get("nameCardId");
-        int finishAchievementNum = (int) playerInfo.get("finishAchievementNum");
-        int towerFloorIndex = (int) playerInfo.get("towerFloorIndex");
-        int towerLevelIndex = (int) playerInfo.get("towerLevelIndex");
-        ArrayList<ShowAvatarInfoList> showAvatarInfoList = showAvatarInfoListMapper(playerInfo);
-        ArrayList<Integer> showNameCardIdList = showNameCardIdListMapper(playerInfo);
-        Map<String, Integer> profilePicture = profilePictureMapper(playerInfo);
+        Integer worldLevel = (Integer) playerInfo.get("worldLevel");
+        Integer nameCardId = (Integer) playerInfo.get("nameCardId");
+        Integer finishAchievementNum = (Integer) playerInfo.get("finishAchievementNum");
+        Integer towerFloorIndex = (Integer) playerInfo.get("towerFloorIndex");
+        Integer towerLevelIndex = (Integer) playerInfo.get("towerLevelIndex");
+        ArrayList<ShowAvatarInfoList> showAvatarInfoList = ((playerInfo.get("showAvatarInfoList") == null)?(null):(showAvatarInfoListMapper(playerInfo)));
+        ArrayList<Integer> showNameCardIdList = ((playerInfo.get("showNameCardIdList") == null)?(null):(showNameCardIdListMapper(playerInfo)));
+        Map<String, Integer> profilePicture =  ((playerInfo.get("profilePicture") == null)?(null):(profilePictureMapper(playerInfo)));
         Integer theaterActIndex = (Integer) playerInfo.get("theaterActIndex");
-        int theaterModeIndex = (int) playerInfo.get("theaterModeIndex");
-        int theaterStarIndex = (int) playerInfo.get("theaterStarIndex");
-        boolean isShowAvatarTalent = (boolean) playerInfo.get("isShowAvatarTalent");
-        int fetterCount = (int) playerInfo.get("fetterCount");
-        int towerStarIndex = (int) playerInfo.get("towerStarIndex");
+        Integer theaterModeIndex = (Integer) playerInfo.get("theaterModeIndex");
+        Integer theaterStarIndex = (Integer) playerInfo.get("theaterStarIndex");
+        Boolean isShowAvatarTalent = (Boolean) playerInfo.get("isShowAvatarTalent");
+        Integer fetterCount = (Integer) playerInfo.get("fetterCount");
+        Integer towerStarIndex = (Integer) playerInfo.get("towerStarIndex");
 
         return new PlayerInfo(nickname, level, signature, worldLevel, nameCardId, finishAchievementNum, towerFloorIndex, towerLevelIndex, showAvatarInfoList, showNameCardIdList, profilePicture, theaterActIndex, theaterModeIndex, theaterStarIndex, isShowAvatarTalent, fetterCount, towerStarIndex);
     }
@@ -263,14 +265,22 @@ public class Mapper {
     }
 
     private static ArrayList<Integer> showNameCardIdListMapper(Map<String, Object> playerInfo) {
-        return new ArrayList<>((ArrayList<Integer>) playerInfo.get("showNameCardIdList"));
+        ArrayList<Integer> showNameCardIdListObj = new ArrayList<>();
+        ArrayList<Integer> showNameCardIdList = (ArrayList<Integer>) playerInfo.get("showNameCardIdList");
+        try {
+            showNameCardIdListObj.addAll(showNameCardIdList);
+        } catch (Exception e) {
+            return null;
+        }
+        return showNameCardIdListObj;
+//        return new ArrayList<>((ArrayList<Integer>) playerInfo.get("showNameCardIdList"));
     }
 
     private static ArrayList<ShowAvatarInfoList> showAvatarInfoListMapper(Map<String, Object> playerInfo) {
         ArrayList<ShowAvatarInfoList> showAvatarInfoList = new ArrayList<>();
         for (Object o : (ArrayList<Object>) playerInfo.get(("showAvatarInfoList"))){
             Map<String, Object> showAvatarInfoListItem = (Map<String, Object>) o;
-            ShowAvatarInfoList item = new ShowAvatarInfoList((int)showAvatarInfoListItem.get("avatarId"), (int)showAvatarInfoListItem.get("level"), (int)showAvatarInfoListItem.get("energyType"));
+            ShowAvatarInfoList item = new ShowAvatarInfoList((Integer) showAvatarInfoListItem.get("avatarId"), (Integer)showAvatarInfoListItem.get("level"), (Integer)showAvatarInfoListItem.get("energyType"));
             showAvatarInfoList.add(item);
         }
         return showAvatarInfoList;
