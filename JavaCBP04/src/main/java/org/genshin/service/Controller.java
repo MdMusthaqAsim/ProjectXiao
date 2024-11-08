@@ -100,13 +100,15 @@ public class Controller {
 
     public static void xiaoDmgCalc(Integer uid, AvatarInfoList xiao) {
         Map<String, Double> xiaoTalents= new HashMap<>();
+        xiaoTalents.put("skill%", 4.0402);
         xiaoTalents.put("collision%", 1.6176);
         xiaoTalents.put("lowPlunge%", 3.2346);
         xiaoTalents.put("highPlunge%", 4.0402);
         Double finalAtkStat = xiaoAtkCalc(uid, xiao);
         Double additiveBaseDmgBonus = 9000.0 + 0.32*(196.47+454.36); //xianyun and faruzan additiveBuffs
 
-        Double plungeCollisionFinalBaseDmg = finalAtkStat * xiaoTalents.get("collision%");
+        Double skillFinalBaseDmg = finalAtkStat * xiaoTalents.get("skill%") + 0.32*(196.47+454.36);
+        Double plungeCollisionFinalBaseDmg = finalAtkStat * xiaoTalents.get("collision%") + 0.32*(196.47+454.36);
         Double lowPlungeFinalBaseDmg = (finalAtkStat * xiaoTalents.get("lowPlunge%")) + additiveBaseDmgBonus;
         Double highPlungeFinalBaseDmg = (finalAtkStat * xiaoTalents.get("highPlunge%")) + additiveBaseDmgBonus;
 
@@ -118,6 +120,7 @@ public class Controller {
         Double dmgReductionTarget = 0.0;
 
         Double totalDmgBonus = (1+ultDmgBonusPercent+xiaoA4PassiveDmgBonus+anemoDmgBonus+furinaDmgBonusBuffC2 - dmgReductionTarget);
+        Double totalDmgBonusNonUlt = (1+anemoDmgBonus+furinaDmgBonusBuffC2 - dmgReductionTarget);
 
         Double finalCritRate = xiao.getFightPropMap().get(20) + 0.04; //minimum of xianyun a1 passive in case of single target
         Double finalCritDmg = xiao.getFightPropMap().get(22) + 0.4; //faruzan c6
@@ -141,12 +144,15 @@ public class Controller {
             enemyResMult = 1/(4*enemyRes + 1);
         }
 
-        Double finalSkillDmg;
+        Double finalSkillDmg = skillFinalBaseDmg * totalDmgBonusNonUlt * avgCritMultiplier * enemyDefMult * enemyResMult;
         Double finalPlungeCollisionDmg = plungeCollisionFinalBaseDmg * totalDmgBonus * avgCritMultiplier * enemyDefMult * enemyResMult;
         Double finalLowPlungeDmg = lowPlungeFinalBaseDmg * totalDmgBonus * avgCritMultiplier * enemyDefMult * enemyResMult;
         Double finalHighPlungeDmg = highPlungeFinalBaseDmg * totalDmgBonus * avgCritMultiplier * enemyDefMult * enemyResMult;
+        Double finalDPR = (11*finalHighPlungeDmg)+(11*finalPlungeCollisionDmg)+(2*finalSkillDmg);
 
-        System.out.println("["+uid+"] total DPR = "+((11*finalHighPlungeDmg)+(11*finalPlungeCollisionDmg)));
+        if(finalHighPlungeDmg > 178920){
+            System.out.println("["+uid+"] total DPR = "+(finalDPR)+" high plunge = ["+(finalHighPlungeDmg)+"]");
+        }
     }
 
 }
