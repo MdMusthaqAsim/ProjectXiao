@@ -5,6 +5,7 @@ import org.genshin.model.*;
 
 import java.util.ArrayList;
 import java.util.Map;
+import java.util.Objects;
 
 import static org.genshin.service.Controller.FFXXiaoDps;
 import static org.genshin.service.Controller.deHasher;
@@ -21,30 +22,34 @@ public class DatabaseCalls {
         }
     }
     public static void initialInsert(User user) {
-        try {
-            playerDataInsert(user);
-            artifactDataInsert(user);
-            artCountInsert(user);
-            SetEffect RS=getSetEffect(user);
-            Damage damage = FFXXiaoDps(user, RS);
-            damageInsert(damage);
-            System.out.println(user.getUid()+" inserted successfully.");
-        } catch (SQLException e) {
-            System.out.println(e);
+        if (user.getAvatarInfoList() != null) {
+            try {
+                playerDataInsert(user);
+                artifactDataInsert(user);
+                artCountInsert(user);
+                SetEffect RS=getSetEffect(user);
+                Damage damage = FFXXiaoDps(user, RS);
+                damageInsert(damage);
+                System.out.println(user.getUid()+" inserted successfully.");
+            } catch (SQLException e) {
+                System.out.println(e);
+            }
         }
     }
     public static void playerDataInsert(User user) throws SQLException {
-        Integer UID= Integer.valueOf((user.getUid()));
+        Integer UID= Integer.parseInt((user.getUid()));
         Integer characterID=1021947690;
-        Integer weaponID=null;
+        Long weaponID=null;
         ArrayList<AvatarInfoList> avatarInfoList=(ArrayList<AvatarInfoList>) user.getAvatarInfoList();
-        for( AvatarInfoList avatarInfoListItem: avatarInfoList){
-            if(avatarInfoListItem.getAvatarId()==10000026){
-                ArrayList<EquipList> EquipList=avatarInfoListItem.getEquipList();
-                for(EquipList equips:EquipList){
-                    if(equips.getWeapon()!=null){
-                        Flat flat= (Flat) equips.getFlat();
-                        weaponID= Integer.valueOf(flat.getNameTextMapHash());
+        if (avatarInfoList != null) {
+            for( AvatarInfoList avatarInfoListItem: avatarInfoList){
+                if(avatarInfoListItem.getAvatarId()==10000026){
+                    ArrayList<EquipList> EquipList=avatarInfoListItem.getEquipList();
+                    for(EquipList equips:EquipList){
+                        if(equips.getWeapon()!=null){
+                            Flat flat= (Flat) equips.getFlat();
+                            weaponID= Long.parseLong(flat.getNameTextMapHash());
+                        }
                     }
                 }
             }
@@ -55,13 +60,16 @@ public class DatabaseCalls {
             s.execute("insert into playerData values("+UID+","+characterID+","+weaponID+");");
             con.close();
         } catch (SQLException e) {
-            throw new RuntimeException(e);
+            System.out.println("["+UID+"] : "+e);
         }
     }
     public static void artifactDataInsert(User user){
         Integer UID= Integer.valueOf((user.getUid()));
         Integer characterID=1021947690;
         ArrayList<AvatarInfoList> avatarInfoList=(ArrayList<AvatarInfoList>) user.getAvatarInfoList();
+        if (avatarInfoList == null){
+            return;
+        }
         for( AvatarInfoList avatarInfoListItem: avatarInfoList){
             if(avatarInfoListItem.getAvatarId()==10000026){
                 ArrayList<EquipList> EquipList=avatarInfoListItem.getEquipList();
@@ -80,16 +88,22 @@ public class DatabaseCalls {
                         mainStat=reliquaryMainstat.getMainPropId();
                         mainStatValue= (float) reliquaryMainstat.getStatValue();
                         artPiece=flat.getEquipType();
-                        artSet=deHasher(Integer.parseInt(flat.getSetNameTextMapHash()));
+                        artSet=deHasher(Long.parseLong(flat.getSetNameTextMapHash()));
+
+
+                        artSet = artSet.replace("'", "");
+
+
                         ArrayList<ReliquarySubstats> reliquarySubstats=flat.getReliquarySubstats();
                         for(ReliquarySubstats RS:reliquarySubstats){
-                            if(RS.getAppendPropId()=="FIGHT_PROP_CRITICAL")
-                                critRate=RS.getStatValue();
-                            else if (RS.getAppendPropId()=="FIGHT_PROP_CRITICAL_HURT") {
+                            if(Objects.equals(RS.getAppendPropId(), "FIGHT_PROP_CRITICAL")) {
+                                critRate = RS.getStatValue();
+                            }
+                            else if (Objects.equals(RS.getAppendPropId(), "FIGHT_PROP_CRITICAL_HURT")) {
                                 critDamage=RS.getStatValue();
-                            } else if (RS.getAppendPropId()=="FIGHT_PROP_ATTACK_PERCENT") {
+                            } else if (Objects.equals(RS.getAppendPropId(), "FIGHT_PROP_ATTACK_PERCENT")) {
                                 percentAtk=RS.getStatValue();
-                            } else if (RS.getAppendPropId()=="FIGHT_PROP_ATTACK") {
+                            } else if (Objects.equals(RS.getAppendPropId(), "FIGHT_PROP_ATTACK")) {
                                 flatAtk=RS.getStatValue();
                             }
                         }
@@ -99,7 +113,7 @@ public class DatabaseCalls {
                             s.execute("insert into artifactData values("+UID+","+characterID+",'"+artPiece+"','"+mainStat+"',"+mainStatValue+",'"+artSet+"',"+critRate+","+critDamage+","+percentAtk+","+flatAtk+");");
                             con.close();
                         }catch (SQLException e){
-                            throw new RuntimeException(e);
+                            System.out.println(e);;
                         }
                     }
                 }
@@ -122,7 +136,7 @@ public class DatabaseCalls {
             }
             con.close();
         }catch (SQLException e){
-            throw new RuntimeException(e);
+            ;
         }
     }
     public static SetEffect getSetEffect(User user){
@@ -173,9 +187,6 @@ public class DatabaseCalls {
             }catch(SQLException e){
                 System.out.println(e);
             }
-        }
-        else{
-            System.out.println("Damage Object is NULL:::::");
         }
     }
 }

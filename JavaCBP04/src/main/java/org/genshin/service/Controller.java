@@ -13,6 +13,7 @@ import java.util.Objects;
 
 import static java.lang.Math.clamp;
 import static org.genshin.repository.DatabaseCalls.batchInsert;
+import static org.genshin.repository.DatabaseCalls.initialInsert;
 
 public class Controller {
     public static void driver(){
@@ -24,18 +25,19 @@ public class Controller {
             XiaoMainUserMap.put(uid, user);
         }
         batchInsert(XiaoMainUserMap);
+//        initialInsert(XiaoMainUserMap.get(809949310));
     }
 
-    public static String deHasher(Integer hashCode){
+    public static String deHasher(Long hashCode){
         ObjectMapper objectMapper = new ObjectMapper();
         try {
-            Integer value;
+            Long value;
             // Read JSON file into a Map
             Map<String, Object> LOC = (Map<String, Object>) objectMapper.readValue(new File("/Users/mohammedmusthaqasimshaik/IdeaProjects/ProjectXiao/JavaCBP04/src/main/java/org/genshin/assets/loc.json"), Map.class);
             Map<String, Object> charMap = (Map<String, Object>) objectMapper.readValue(new File("/Users/mohammedmusthaqasimshaik/IdeaProjects/ProjectXiao/JavaCBP04/src/main/java/org/genshin/assets/characters.json"), Map.class);
             if ((Map<String, Object>) charMap.get(hashCode.toString())!=null) {
                 Map<String,Object> internal = (Map<String, Object>) charMap.get(hashCode.toString());
-                Integer nameTextMapHash= (Integer) internal.get("NameTextMapHash");
+                Long nameTextMapHash= (Long) internal.get("NameTextMapHash");
                 value = nameTextMapHash;
                 //System.out.println(value);
             }
@@ -69,7 +71,9 @@ public class Controller {
 
     public static Damage FFXXiaoDps(User user, SetEffect setEffect){
         Integer setEffectCode;
-        if(Objects.equals(setEffect.getArtSet(), "Vermillion Hereafter")) {
+        if(setEffect == null){
+            setEffectCode = -1;
+        } else if(Objects.equals(setEffect.getArtSet(), "Vermillion Hereafter")) {
             setEffectCode = 0;
         } else if (Objects.equals(setEffect.getArtSet(), "Marechaussee Hunter")) {
             setEffectCode = 1;
@@ -80,14 +84,14 @@ public class Controller {
         if(user.getAvatarInfoList() != null){
             for(AvatarInfoList o: user.getAvatarInfoList()){
                 if(o.getAvatarId() == 10000026){
-                    Integer weaponId = null;
+                    Long weaponId = null;
 
                     //getting weapon id
                     ArrayList<EquipList> EquipList=o.getEquipList();
                     for(EquipList equips:EquipList){
                         if(equips.getWeapon()!=null){
                             Flat flat= (Flat) equips.getFlat();
-                            weaponId= Integer.valueOf(flat.getNameTextMapHash());
+                            weaponId= Long.parseLong(flat.getNameTextMapHash());
                         }
                     }
                     String weaponName = deHasher(weaponId);
