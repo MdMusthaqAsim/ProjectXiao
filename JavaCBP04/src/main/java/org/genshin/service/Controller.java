@@ -3,31 +3,27 @@ package org.genshin.service;
 import com.fasterxml.jackson.databind.*;
 import org.genshin.controller.UidJsonFetcher;
 import org.genshin.mapper.Mapper;
-import org.genshin.model.AvatarInfoList;
-import org.genshin.model.User;
+import org.genshin.model.*;
 
 import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 
 import static java.lang.Math.clamp;
+import static org.genshin.repository.DatabaseCalls.batchInsert;
 
 public class Controller {
-    public static void controlAndMapHash(){
+    public static void driver(){
         Map<Integer, User> XiaoMainUserMap = new HashMap<>();
         // use akasha json to get an arraylist of all xiao users, then create a user object for each uid in that arraylist, then map all the uids and user objects into the above map
         ArrayList<Integer> uidList = UidJsonFetcher.jsonFetcher();
         for (Integer uid : uidList){
             User user = Mapper.userMapper("/Users/mohammedmusthaqasimshaik/IdeaProjects/ProjectXiao/JavaCBP04/src/main/java/org/genshin/assets/UserJSONs/"+uid+".json");
             XiaoMainUserMap.put(uid, user);
-            //dmg calc code, decoding hashmaps
-            try{
-                FFXXiaoDps(uid, user);
-            } catch (Exception e){
-                System.err.println(e);
-            }
         }
+        batchInsert(XiaoMainUserMap);
     }
 
     public static String deHasher(Integer hashCode){
@@ -71,40 +67,71 @@ public class Controller {
         return hashValues.get(hashCode);
     } //prop hash codes but not prop map
 
-    public static void FFXXiaoDps(Integer uid, User user){
+    public static Damage FFXXiaoDps(User user, SetEffect setEffect){
+        Integer setEffectCode;
+        if(Objects.equals(setEffect.getArtSet(), "Vermillion Hereafter")) {
+            setEffectCode = 0;
+        } else if (Objects.equals(setEffect.getArtSet(), "Marechaussee Hunter")) {
+            setEffectCode = 1;
+        } else {
+            setEffectCode = -1;
+        }
+        Integer uid = Integer.parseInt(user.getUid());
         if(user.getAvatarInfoList() != null){
             for(AvatarInfoList o: user.getAvatarInfoList()){
                 if(o.getAvatarId() == 10000026){
-                    xiaoDmgCalc(uid, o);
+                    Integer weaponId = null;
+
+                    //getting weapon id
+                    ArrayList<EquipList> EquipList=o.getEquipList();
+                    for(EquipList equips:EquipList){
+                        if(equips.getWeapon()!=null){
+                            Flat flat= (Flat) equips.getFlat();
+                            weaponId= Integer.valueOf(flat.getNameTextMapHash());
+                        }
+                    }
+                    String weaponName = deHasher(weaponId);
+
+                    return xiaoDmgCalc(uid, o, setEffectCode, weaponName);
                 }
             }
-            return;
         }
+        return null;
     }
 
-    public static Double xiaoAtkCalc(Integer uid, AvatarInfoList xiao) {
+    public static Double xiaoAtkCalc(AvatarInfoList xiao, Integer setEffectCode, String weaponName) {
         Double baseAtk = xiao.getFightPropMap().get(4);
         Double flatAtkBuff = xiao.getFightPropMap().get(5);
-        Double setEffectAtkPercentBuff = 0.48;//::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::DONT DO THIS/Make a repo call to get actual effect
+        Double setEffectAtkPercentBuff = 0.0;
+        if(setEffectCode == 0){
+            setEffectAtkPercentBuff = 0.48;
+        }
         Double teamNoblesseAtkPercentBuff = 0.2;
         Double teamTenacityAtkPercentBuff = 0.2;
         Double percentageAtk = xiao.getFightPropMap().get(6) + setEffectAtkPercentBuff + teamTenacityAtkPercentBuff + teamNoblesseAtkPercentBuff;
         Double hpFinal = xiao.getFightPropMap().get(2000);
 
-        Double weaponFlatAtkBuff = hpFinal*(0.018); //homa
-        Double weaponAtkPercentBuff = 0.0; //pjws
+        Double weaponFlatAtkBuff = 0.0;
+        Double weaponAtkPercentBuff = 0.0;
+        if(Objects.equals(weaponName, "Staff of Homa")){
+            weaponFlatAtkBuff = hpFinal*(0.018);
+        } else if (Objects.equals(weaponName, "Calamity Queller")) {
+            weaponAtkPercentBuff = 0.384;
+        } else if (Objects.equals(weaponName, "Primordial Jade Winged-Spear")) {
+            weaponAtkPercentBuff = 0.344;
+        }
 
         Double finalAtkStat = ( baseAtk * (1+percentageAtk+weaponAtkPercentBuff) ) + flatAtkBuff+weaponFlatAtkBuff;
         return finalAtkStat;
     }
 
-    public static void xiaoDmgCalc(Integer uid, AvatarInfoList xiao) {
+    public static Damage xiaoDmgCalc(Integer uid, AvatarInfoList xiao, Integer setEffectCode, String weaponName) {
         Map<String, Double> xiaoTalents= new HashMap<>();
         xiaoTalents.put("skill%", 4.0402);
         xiaoTalents.put("collision%", 1.6176);
         xiaoTalents.put("lowPlunge%", 3.2346);
         xiaoTalents.put("highPlunge%", 4.0402);
-        Double finalAtkStat = xiaoAtkCalc(uid, xiao);
+        Double finalAtkStat = xiaoAtkCalc(xiao, setEffectCode, weaponName);
         Double additiveBaseDmgBonus = 9000.0 + 0.32*(196.47+454.36); //xianyun and faruzan additiveBuffs
 
         Double skillFinalBaseDmg = finalAtkStat * xiaoTalents.get("skill%") + 0.32*(196.47+454.36);
@@ -122,7 +149,11 @@ public class Controller {
         Double totalDmgBonus = (1+ultDmgBonusPercent+xiaoA4PassiveDmgBonus+anemoDmgBonus+furinaDmgBonusBuffC2 - dmgReductionTarget);
         Double totalDmgBonusNonUlt = (1+anemoDmgBonus+furinaDmgBonusBuffC2 - dmgReductionTarget);
 
-        Double finalCritRate = xiao.getFightPropMap().get(20) + 0.04; //minimum of xianyun a1 passive in case of single target
+        Double setEffectCritRateBonus = 0.0;
+        if(setEffectCode == 1){
+            setEffectCritRateBonus = 0.36;
+        }
+        Double finalCritRate = xiao.getFightPropMap().get(20) + 0.04 + setEffectCritRateBonus; //minimum of xianyun a1 passive in case of single target
         Double finalCritDmg = xiao.getFightPropMap().get(22) + 0.4; //faruzan c6
 
         Double avgCritMultiplier = 1 + (clamp(finalCritRate, 0.0, 100.0) * finalCritDmg); //avg crit
@@ -150,9 +181,9 @@ public class Controller {
         Double finalHighPlungeDmg = highPlungeFinalBaseDmg * totalDmgBonus * avgCritMultiplier * enemyDefMult * enemyResMult;
         Double finalDPR = (11*finalHighPlungeDmg)+(11*finalPlungeCollisionDmg)+(2*finalSkillDmg);
 
-        if(finalHighPlungeDmg > 178920){
-            System.out.println("["+uid+"] total DPR = "+(finalDPR)+" high plunge = ["+(finalHighPlungeDmg)+"]");
-        }
-    }
+        //dmg object
+        Damage damage = new Damage(uid, 10000026, finalSkillDmg, finalPlungeCollisionDmg, finalLowPlungeDmg, finalHighPlungeDmg, finalDPR);
 
+        return damage;
+    } //messy code, but iss okay
 }

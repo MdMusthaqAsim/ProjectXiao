@@ -6,16 +6,31 @@ import org.genshin.model.*;
 import java.util.ArrayList;
 import java.util.Map;
 
+import static org.genshin.service.Controller.FFXXiaoDps;
 import static org.genshin.service.Controller.deHasher;
 
 public class DatabaseCalls {
-    public static void initialInsert(User user) throws SQLException {
+    static String url = "jdbc:mysql://localhost:3306/pxe";
+    static String username = "root";
+    static String pass = "frozenapp";
+
+    public static void batchInsert(Map<Integer, User> XiaoMainUserMap){
+        for (Integer key : XiaoMainUserMap.keySet()){
+            User user = XiaoMainUserMap.get(key);
+            initialInsert(user);
+        }
+    }
+    public static void initialInsert(User user) {
         try {
             playerDataInsert(user);
             artifactDataInsert(user);
             artCountInsert(user);
+            SetEffect RS=getSetEffect(user);
+            Damage damage = FFXXiaoDps(user, RS);
+            damageInsert(damage);
+            System.out.println(user.getUid()+" inserted successfully.");
         } catch (SQLException e) {
-            throw new RuntimeException(e);
+            System.out.println(e);
         }
     }
     public static void playerDataInsert(User user) throws SQLException {
@@ -35,9 +50,6 @@ public class DatabaseCalls {
             }
         }
         try {
-            String url="jdbc:mysql://localhost:3306/pxe";
-            String username="root";
-            String pass="frozenapp";
             Connection con=DriverManager.getConnection(url,username,pass);
             Statement s= con.createStatement();
             s.execute("insert into playerData values("+UID+","+characterID+","+weaponID+");");
@@ -82,9 +94,6 @@ public class DatabaseCalls {
                             }
                         }
                         try {
-                            String url = "jdbc:mysql://localhost:3306/pxe";
-                            String username = "root";
-                            String pass = "frozenapp";
                             Connection con = DriverManager.getConnection(url, username, pass);
                             Statement s = con.createStatement();
                             s.execute("insert into artifactData values("+UID+","+characterID+",'"+artPiece+"','"+mainStat+"',"+mainStatValue+",'"+artSet+"',"+critRate+","+critDamage+","+percentAtk+","+flatAtk+");");
@@ -101,16 +110,13 @@ public class DatabaseCalls {
         Integer UID= Integer.valueOf((user.getUid()));
         Integer characterID=1021947690;
         try {
-            String url = "jdbc:mysql://localhost:3306/pxe";
-            String username = "root";
-            String pass = "frozenapp";
             Connection con = DriverManager.getConnection(url, username, pass);
             Statement s = con.createStatement();
             ResultSet countMatrix=s.executeQuery("select artSet,count(*) as count from artifactData where (UID="+UID+" and characterID="+characterID+") group by artSet");
             while(countMatrix.next()){
                 String AS=countMatrix.getString("artSet");
                 Integer AC=countMatrix.getInt("count");
-                if(AC>=2){
+                if(AC>=4){
                     s.execute("insert into artCount values("+UID+","+characterID+",'"+AS+"',"+AC+");");
                 }
             }
@@ -118,5 +124,58 @@ public class DatabaseCalls {
         }catch (SQLException e){
             throw new RuntimeException(e);
         }
-    };
+    }
+    public static SetEffect getSetEffect(User user){
+        Integer UID= Integer.valueOf((user.getUid()));
+        Integer characterID=1021947690;
+        String artSet = null;
+        String statName = null;
+        Double statChange= null;
+        try{
+            Connection con=DriverManager.getConnection(url,username,pass);
+            Statement s=con.createStatement();
+            ResultSet countMatrix=s.executeQuery("select artSet,count from artCount where (UID="+UID+" and characterID="+characterID+");");
+            while(countMatrix.next()){
+                if(countMatrix.getInt("count")>=4){
+                    artSet=countMatrix.getString("artSet");
+                    break;
+                }
+            }
+            if(artSet!=null){
+                ResultSet effectMatrix=s.executeQuery("select statName,statChange from artifactSetStore where artSet='"+artSet+"';");
+                while(effectMatrix.next()){
+                    statName=effectMatrix.getString("statName");
+                    statChange= effectMatrix.getDouble("statChange");
+                }
+                SetEffect setEffect=new SetEffect(artSet,statName,statChange);
+                return setEffect;
+            }
+            con.close();
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+        return null;
+    }
+    public static void damageInsert(Damage damage){
+        if (damage!=null) {
+            Integer UID= damage.getUid();
+            Integer characterID= damage.getCharacterId();
+            Double CD= damage.getCD();
+            Double E= damage.getE();
+            Double LP= damage.getLP();
+            Double HP= damage.getHP();
+            Double DPR= damage.getDPR();
+            try{
+                Connection con = DriverManager.getConnection(url, username, pass);
+                Statement s = con.createStatement();
+                s.execute("insert into damage values("+UID+","+characterID+","+CD+","+E+","+LP+","+HP+","+DPR+");");
+                con.close();
+            }catch(SQLException e){
+                System.out.println(e);
+            }
+        }
+        else{
+            System.out.println("Damage Object is NULL:::::");
+        }
+    }
 }

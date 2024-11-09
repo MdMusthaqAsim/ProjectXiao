@@ -8,6 +8,11 @@ import java.util.*;
 //fetches enka jsons from the uids provided by akashauidfetcher and stores them and returns the uid list
 
 public class UidJsonFetcher {
+    public static void uidRemover(Integer UID){
+        ArrayList<Integer> uidList=returnUidListFromFile();
+        uidList.remove(UID);
+        uidListFileWriter(uidList);
+    }
 
     public static void uidListFileWriter(ArrayList<Integer> uidList){
         String text = uidList.toString();
