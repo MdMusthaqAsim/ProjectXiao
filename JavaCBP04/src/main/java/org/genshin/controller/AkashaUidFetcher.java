@@ -81,6 +81,7 @@ public class AkashaUidFetcher { //make this check the arraylist first
                 add("https://akasha.cv/api/leaderboards?sort=calculation.result&order=-1&size=20&page=10&filter=&uids=&p=lt%7C685716.380288172&fromId=65ad1028dbe6a10bf279beb2&li=180&variant=120er&calculationId=1000002601");
 
                 add("https://akasha.cv/api/leaderboards?sort=calculation.result&order=-1&size=20&page=11&filter=&uids=&p=lt%7C683950.688454308&fromId=663f4f738f1b3f627f5f77a7&li=200&variant=120er&calculationId=1000002601");
+                add("https://akasha.cv/api/leaderboards?sort=calculation.result&order=-1&size=20&page=12&filter=&uids=&p=lt%7C683100.1127737699&fromId=65d9be2b8f1b3f627f00eabf&li=220&variant=120er&calculationId=1000002601");
             }
         };
         ObjectMapper objectMapper = new ObjectMapper();
