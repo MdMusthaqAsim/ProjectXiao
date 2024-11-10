@@ -68,7 +68,7 @@ public class DatabaseCalls {
                 SetEffect RS=getSetEffect(user);
                 Damage damage = FFXXiaoDps(user, RS);
                 damageInsert(damage);
-                System.out.println(user.getUid()+" inserted successfully.");
+                System.out.print(user.getUid()+" inserted successfully::");
             } catch (SQLException e) {
                 System.out.println(e);
             }

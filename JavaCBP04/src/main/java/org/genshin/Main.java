@@ -16,8 +16,8 @@ public class Main {
         do{
             System.out.println("Choose an FFXX leaderboard: ");
             System.out.println("1. Unified Player Ranking");
-            System.out.println("2. Marechaussee Hunter");
-            System.out.println("3. Vermillion Hereafter");
+            System.out.println("2. Marechaussee Hunter Ranking");
+            System.out.println("3. Vermillion Hereafter Ranking");
             System.out.println("0. Exit");
             System.out.print("Option: ");
             leaderboardOption = inp.nextInt();
