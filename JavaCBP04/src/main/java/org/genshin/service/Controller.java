@@ -14,6 +14,7 @@ import java.util.Objects;
 import static java.lang.Math.clamp;
 import static org.genshin.repository.DatabaseCalls.batchInsert;
 import static org.genshin.repository.DatabaseCalls.initialInsert;
+import static org.genshin.repository.DeletionHandler.wipePlayers;
 
 public class Controller {
     public static void driver(){
@@ -24,6 +25,7 @@ public class Controller {
             User user = Mapper.userMapper("/Users/mohammedmusthaqasimshaik/IdeaProjects/ProjectXiao/JavaCBP04/src/main/java/org/genshin/assets/UserJSONs/"+uid+".json");
             XiaoMainUserMap.put(uid, user);
         }
+//        wipePlayers(XiaoMainUserMap);
         batchInsert(XiaoMainUserMap);
 //        initialInsert(XiaoMainUserMap.get(809949310));
     }

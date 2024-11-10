@@ -15,6 +15,44 @@ public class DatabaseCalls {
     static String username = "root";
     static String pass = "frozenapp";
 
+    public static void fetchTopPlayers(Integer top){
+        try {
+            Connection con=DriverManager.getConnection(url,username,pass);
+            Statement s= con.createStatement();
+            ResultSet RS=s.executeQuery("select ROW_NUMBER() OVER (ORDER BY DPR desc) AS Ranking, d.UID, DPR, artSet from damage d, artCount a where (d.UID = a.UID) order by DPR desc limit "+top+";");
+            System.out.println(":::::::::::::::::::::::::: Top "+top+" FFXX ::::::::::::::::::::::::::");
+            dualLine(con, RS);
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public static void fetchTopPlayers(Integer top,String artSet){
+        try {
+            Connection con=DriverManager.getConnection(url,username,pass);
+            Statement s= con.createStatement();
+            ResultSet RS=s.executeQuery("select ROW_NUMBER() OVER (ORDER BY DPR desc) AS Ranking, d.UID, DPR, artSet from damage d, artCount a where (d.UID = a.UID and artSet='"+artSet+"') order by DPR desc limit "+top+";");
+            System.out.println(":::::::::::::::: Top "+top+" FFXX "+artSet+" ::::::::::::::::");
+            dualLine(con, RS);
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    private static void dualLine(Connection con, ResultSet RS) throws SQLException {
+
+        System.out.println(":::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::");
+        while(RS.next()){
+            Integer ranking=RS.getInt("Ranking");
+            Long UID=RS.getLong(2);
+            Long DPR=RS.getLong("DPR");
+            System.out.println("::::::::::::::: ["+UID+"] Rank: "+ranking+", DPR: "+DPR+" :::::::::::::::");
+        }
+        System.out.println(":::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::");
+        System.out.println(":::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::");
+        con.close();
+    }
+
     public static void batchInsert(Map<Integer, User> XiaoMainUserMap){
         for (Integer key : XiaoMainUserMap.keySet()){
             User user = XiaoMainUserMap.get(key);
@@ -55,10 +93,12 @@ public class DatabaseCalls {
             }
         }
         try {
-            Connection con=DriverManager.getConnection(url,username,pass);
-            Statement s= con.createStatement();
-            s.execute("insert into playerData values("+UID+","+characterID+","+weaponID+");");
+            Connection con = DriverManager.getConnection(url, username, pass);
+            Statement s = con.createStatement();
+            s.execute("insert into playerData values(" + UID + "," + characterID + "," + weaponID + ");");
             con.close();
+        }catch (SQLIntegrityConstraintViolationException e) {
+
         } catch (SQLException e) {
             System.out.println("["+UID+"] : "+e);
         }
@@ -112,7 +152,9 @@ public class DatabaseCalls {
                             Statement s = con.createStatement();
                             s.execute("insert into artifactData values("+UID+","+characterID+",'"+artPiece+"','"+mainStat+"',"+mainStatValue+",'"+artSet+"',"+critRate+","+critDamage+","+percentAtk+","+flatAtk+");");
                             con.close();
-                        }catch (SQLException e){
+                        }catch (SQLIntegrityConstraintViolationException e){
+                            ;
+                        } catch (SQLException e) {
                             System.out.println(e);;
                         }
                     }
@@ -184,8 +226,10 @@ public class DatabaseCalls {
                 Statement s = con.createStatement();
                 s.execute("insert into damage values("+UID+","+characterID+","+CD+","+E+","+LP+","+HP+","+DPR+");");
                 con.close();
-            }catch(SQLException e){
-                System.out.println(e);
+            }catch (SQLIntegrityConstraintViolationException e){
+                ;
+            } catch (SQLException e) {
+                System.out.println(e);;
             }
         }
     }

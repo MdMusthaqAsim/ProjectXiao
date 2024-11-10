@@ -48,7 +48,7 @@ public class UidJsonFetcher {
         String fileURL = "https://enka.network/api/uid/";
         for (Integer uid : uidList){
             if(oldUidList.contains(uid)){
-                System.err.println("["+uid+"] already has been read, to refresh the content, write the deleting method (maintain uidlist.txt and file consistency)");
+                System.err.println("["+uid+"] already has been read, to refresh the content, use the delete methods.");
             } else {
                 try {
                     String saveDirX = saveDir + uid + ".json";
