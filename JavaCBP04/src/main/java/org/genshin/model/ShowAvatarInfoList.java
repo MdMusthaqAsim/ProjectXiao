@@ -1,37 +1,37 @@
 package org.genshin.model;
 
 public class ShowAvatarInfoList {
-    public ShowAvatarInfoList(int avatarId, int level, int energyType) {
+    public ShowAvatarInfoList(Integer avatarId, Integer level, Integer energyType) {
         this.avatarId = avatarId;
         this.level = level;
         this.energyType = energyType;
     }
 
-    private int avatarId;
-    private int level;
-    private int energyType;
+    private Integer avatarId;
+    private Integer level;
+    private Integer energyType;
 
-    public int getAvatarId() {
+    public Integer getAvatarId() {
         return avatarId;
     }
 
-    public void setAvatarId(int avatarId) {
+    public void setAvatarId(Integer avatarId) {
         this.avatarId = avatarId;
     }
 
-    public int getLevel() {
+    public Integer getLevel() {
         return level;
     }
 
-    public void setLevel(int level) {
+    public void setLevel(Integer level) {
         this.level = level;
     }
 
-    public int getEnergyType() {
+    public Integer getEnergyType() {
         return energyType;
     }
 
-    public void setEnergyType(int energyType) {
+    public void setEnergyType(Integer energyType) {
         this.energyType = energyType;
     }
 }

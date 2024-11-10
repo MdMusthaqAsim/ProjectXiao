@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.Map;
 
 public class PlayerInfo {
-        public PlayerInfo(String nickname, int level, String signature, int worldLevel, int nameCardId, int finishAchievementNum, int towerFloorIndex, int towerLevelIndex, ArrayList<ShowAvatarInfoList> showAvatarInfoList, ArrayList<Integer> showNameCardIdList, Map<String, Integer> profilePicture, int theatreActIndex, int theatreModeIndex, int theatreStarIndex, boolean isShowAvatarTalent, int fetterCount, int towerStarIndex) {
+        public PlayerInfo(String nickname, Integer level, String signature, Integer worldLevel, Integer nameCardId, Integer finishAchievementNum, Integer towerFloorIndex, Integer towerLevelIndex, ArrayList<ShowAvatarInfoList> showAvatarInfoList, ArrayList<Integer> showNameCardIdList, Map<String, Integer> profilePicture, Integer theatreActIndex, Integer theatreModeIndex, Integer theatreStarIndex, Boolean isShowAvatarTalent, Integer fetterCount, Integer towerStarIndex) {
                 this.nickname = nickname;
                 this.level = level;
                 this.signature = signature;
@@ -25,22 +25,22 @@ public class PlayerInfo {
         }
 
         private String nickname;
-        private int level;
+        private Integer level;
         private String signature;
-        private int worldLevel;
-        private int nameCardId;
-        private int finishAchievementNum;
-        private int towerFloorIndex;
-        private int towerLevelIndex;
+        private Integer worldLevel;
+        private Integer nameCardId;
+        private Integer finishAchievementNum;
+        private Integer towerFloorIndex;
+        private Integer towerLevelIndex;
         private ArrayList<ShowAvatarInfoList> showAvatarInfoList;
         private ArrayList<Integer> showNameCardIdList;
         private Map<String, Integer> profilePicture;
-        private int theatreActIndex;
-        private int theatreModeIndex;
-        private int theatreStarIndex;
-        private boolean isShowAvatarTalent;
-        private int fetterCount;
-        private int towerStarIndex;
+        private Integer theatreActIndex;
+        private Integer theatreModeIndex;
+        private Integer theatreStarIndex;
+        private Boolean isShowAvatarTalent;
+        private Integer fetterCount;
+        private Integer towerStarIndex;
 
         public String getNickname() {
                 return nickname;
@@ -50,11 +50,11 @@ public class PlayerInfo {
                 this.nickname = nickname;
         }
 
-        public int getLevel() {
+        public Integer getLevel() {
                 return level;
         }
 
-        public void setLevel(int level) {
+        public void setLevel(Integer level) {
                 this.level = level;
         }
 
@@ -66,43 +66,43 @@ public class PlayerInfo {
                 this.signature = signature;
         }
 
-        public int getWorldLevel() {
+        public Integer getWorldLevel() {
                 return worldLevel;
         }
 
-        public void setWorldLevel(int worldLevel) {
+        public void setWorldLevel(Integer worldLevel) {
                 this.worldLevel = worldLevel;
         }
 
-        public int getNameCardId() {
+        public Integer getNameCardId() {
                 return nameCardId;
         }
 
-        public void setNameCardId(int nameCardId) {
+        public void setNameCardId(Integer nameCardId) {
                 this.nameCardId = nameCardId;
         }
 
-        public int getFinishAchievementNum() {
+        public Integer getFinishAchievementNum() {
                 return finishAchievementNum;
         }
 
-        public void setFinishAchievementNum(int finishAchievementNum) {
+        public void setFinishAchievementNum(Integer finishAchievementNum) {
                 this.finishAchievementNum = finishAchievementNum;
         }
 
-        public int getTowerFloorIndex() {
+        public Integer getTowerFloorIndex() {
                 return towerFloorIndex;
         }
 
-        public void setTowerFloorIndex(int towerFloorIndex) {
+        public void setTowerFloorIndex(Integer towerFloorIndex) {
                 this.towerFloorIndex = towerFloorIndex;
         }
 
-        public int getTowerLevelIndex() {
+        public Integer getTowerLevelIndex() {
                 return towerLevelIndex;
         }
 
-        public void setTowerLevelIndex(int towerLevelIndex) {
+        public void setTowerLevelIndex(Integer towerLevelIndex) {
                 this.towerLevelIndex = towerLevelIndex;
         }
 
@@ -130,51 +130,51 @@ public class PlayerInfo {
                 this.profilePicture = profilePicture;
         }
 
-        public int getTheatreActIndex() {
+        public Integer getTheatreActIndex() {
                 return theatreActIndex;
         }
 
-        public void setTheatreActIndex(int theatreActIndex) {
+        public void setTheatreActIndex(Integer theatreActIndex) {
                 this.theatreActIndex = theatreActIndex;
         }
 
-        public int getTheatreModeIndex() {
+        public Integer getTheatreModeIndex() {
                 return theatreModeIndex;
         }
 
-        public void setTheatreModeIndex(int theatreModeIndex) {
+        public void setTheatreModeIndex(Integer theatreModeIndex) {
                 this.theatreModeIndex = theatreModeIndex;
         }
 
-        public int getTheatreStarIndex() {
+        public Integer getTheatreStarIndex() {
                 return theatreStarIndex;
         }
 
-        public void setTheatreStarIndex(int theatreStarIndex) {
+        public void setTheatreStarIndex(Integer theatreStarIndex) {
                 this.theatreStarIndex = theatreStarIndex;
         }
 
-        public boolean isShowAvatarTalent() {
+        public Boolean isShowAvatarTalent() {
                 return isShowAvatarTalent;
         }
 
-        public void setShowAvatarTalent(boolean showAvatarTalent) {
+        public void setShowAvatarTalent(Boolean showAvatarTalent) {
                 isShowAvatarTalent = showAvatarTalent;
         }
 
-        public int getFetterCount() {
+        public Integer getFetterCount() {
                 return fetterCount;
         }
 
-        public void setFetterCount(int fetterCount) {
+        public void setFetterCount(Integer fetterCount) {
                 this.fetterCount = fetterCount;
         }
 
-        public int getTowerStarIndex() {
+        public Integer getTowerStarIndex() {
                 return towerStarIndex;
         }
 
-        public void setTowerStarIndex(int towerStarIndex) {
+        public void setTowerStarIndex(Integer towerStarIndex) {
                 this.towerStarIndex = towerStarIndex;
         }
 }
