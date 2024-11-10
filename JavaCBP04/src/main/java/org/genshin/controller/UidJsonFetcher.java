@@ -55,6 +55,9 @@ public class UidJsonFetcher {
                     String fileURLX = fileURL + uid;
                     JsonToFileWriter.saveURLContentToFile(fileURLX, saveDirX);
                 } catch (IOException e) {
+                    System.out.println(e);
+                    ;
+                } catch (Exception e) {
                     throw new RuntimeException(e);
                 }
             }

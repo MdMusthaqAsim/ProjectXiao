@@ -82,6 +82,15 @@ public class AkashaUidFetcher { //make this check the arraylist first
 
                 add("https://akasha.cv/api/leaderboards?sort=calculation.result&order=-1&size=20&page=11&filter=&uids=&p=lt%7C683950.688454308&fromId=663f4f738f1b3f627f5f77a7&li=200&variant=120er&calculationId=1000002601");
                 add("https://akasha.cv/api/leaderboards?sort=calculation.result&order=-1&size=20&page=12&filter=&uids=&p=lt%7C683100.1127737699&fromId=65d9be2b8f1b3f627f00eabf&li=220&variant=120er&calculationId=1000002601");
+                add("https://akasha.cv/api/leaderboards?sort=calculation.result&order=-1&size=20&page=13&filter=&uids=&p=lt%7C681568.1413199713&fromId=65449b1ddbe6a10bf2db3d01&li=240&variant=120er&calculationId=1000002601");
+                add("https://akasha.cv/api/leaderboards?sort=calculation.result&order=-1&size=20&page=14&filter=&uids=&p=lt%7C680076.7161558791&fromId=65108c5bdbe6a10bf29dc0c6&li=260&variant=120er&calculationId=1000002601");
+                add("https://akasha.cv/api/leaderboards?sort=calculation.result&order=-1&size=20&page=15&filter=&uids=&p=lt%7C678779.341351947&fromId=64ea58f2dbe6a10bf2aa16ab&li=280&variant=120er&calculationId=1000002601");
+
+                add("https://akasha.cv/api/leaderboards?sort=calculation.result&order=-1&size=20&page=16&filter=&uids=&p=lt%7C677994.7958403876&fromId=64ea58c2dbe6a10bf2a91d31&li=300&variant=120er&calculationId=1000002601");
+                add("https://akasha.cv/api/leaderboards?sort=calculation.result&order=-1&size=20&page=17&filter=&uids=&p=lt%7C676720.5725805202&fromId=64ea591cdbe6a10bf2aaf55e&li=320&variant=120er&calculationId=1000002601");
+                add("https://akasha.cv/api/leaderboards?sort=calculation.result&order=-1&size=20&page=18&filter=&uids=&p=lt%7C675969.9750354099&fromId=64ea5929dbe6a10bf2ab3c14&li=340&variant=120er&calculationId=1000002601");
+                add("https://akasha.cv/api/leaderboards?sort=calculation.result&order=-1&size=20&page=19&filter=&uids=&p=lt%7C674774.8186697598&fromId=64ea5953dbe6a10bf2ac2347&li=360&variant=120er&calculationId=1000002601");
+                add("https://akasha.cv/api/leaderboards?sort=calculation.result&order=-1&size=20&page=20&filter=&uids=&p=lt%7C673997.9632114322&fromId=65d5a929dbe6a10bf24a9900&li=380&variant=120er&calculationId=1000002601");
             }
         };
         ObjectMapper objectMapper = new ObjectMapper();

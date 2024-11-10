@@ -56,7 +56,9 @@ public class DatabaseCalls {
     public static void batchInsert(Map<Integer, User> XiaoMainUserMap){
         for (Integer key : XiaoMainUserMap.keySet()){
             User user = XiaoMainUserMap.get(key);
-            initialInsert(user);
+            if (user!=null) {
+                initialInsert(user);
+            }
         }
     }
     public static void initialInsert(User user) {
