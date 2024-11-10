@@ -20,7 +20,7 @@ public class DatabaseCalls {
             Connection con=DriverManager.getConnection(url,username,pass);
             Statement s= con.createStatement();
             ResultSet RS=s.executeQuery("select ROW_NUMBER() OVER (ORDER BY DPR desc) AS Ranking, d.UID, DPR, artSet from damage d, artCount a where (d.UID = a.UID) order by DPR desc limit "+top+";");
-            System.out.println(":::::::::::::::::::::::::: Top "+top+" FFXX ::::::::::::::::::::::::::");
+            System.out.println(":::::::::::::::::::::::::::: Top "+top+" FFXX :::::::::::::::::::::::::::");
             dualLine(con, RS);
         } catch (SQLException e) {
             throw new RuntimeException(e);
@@ -32,7 +32,7 @@ public class DatabaseCalls {
             Connection con=DriverManager.getConnection(url,username,pass);
             Statement s= con.createStatement();
             ResultSet RS=s.executeQuery("select ROW_NUMBER() OVER (ORDER BY DPR desc) AS Ranking, d.UID, DPR, artSet from damage d, artCount a where (d.UID = a.UID and artSet='"+artSet+"') order by DPR desc limit "+top+";");
-            System.out.println(":::::::::::::::: Top "+top+" FFXX "+artSet+" ::::::::::::::::");
+            System.out.println(":::::::::::::::::: Top "+top+" FFXX "+artSet+" :::::::::::::::::");
             dualLine(con, RS);
         } catch (SQLException e) {
             throw new RuntimeException(e);
@@ -41,15 +41,15 @@ public class DatabaseCalls {
 
     private static void dualLine(Connection con, ResultSet RS) throws SQLException {
 
-        System.out.println(":::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::");
+        System.out.println("::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::");
         while(RS.next()){
             Integer ranking=RS.getInt("Ranking");
             Long UID=RS.getLong(2);
             Long DPR=RS.getLong("DPR");
-            System.out.println("::::::::::::::: ["+UID+"] Rank: "+ranking+", DPR: "+DPR+" :::::::::::::::");
+            System.out.println("::::::::::::::: ["+UID+"]\tRank: "+ranking+",\tDPR: "+DPR+" :::::::::::::::");
         }
-        System.out.println(":::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::");
-        System.out.println(":::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::");
+        System.out.println("::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::");
+        System.out.println("::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::");
         con.close();
     }
 
