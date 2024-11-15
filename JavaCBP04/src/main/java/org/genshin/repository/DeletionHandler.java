@@ -17,7 +17,7 @@ public class DeletionHandler {
 
     public static void wipePlayers(Map<Integer, User> XiaoMainUserMap){
         for(Integer key : XiaoMainUserMap.keySet()){
-            deleteEntirePlayer(XiaoMainUserMap.get(key));
+            deleteEntirePlayer(key);
         }
         System.out.println("Deletion Done.");
     }
@@ -36,21 +36,19 @@ public class DeletionHandler {
         }
     }
 
-    public static void deleteEntirePlayer(User user){
-        Integer UID= Integer.valueOf(user.getUid());
+    public static void deleteEntirePlayer(Integer UID){
         try {
-            deleteDamage(user);
-            deleteArtCount(user);
-            deleteArtifactData(user);
-            deletePlayerData(user);
+            deleteDamage(UID);
+            deleteArtCount(UID);
+            deleteArtifactData(UID);
+            deletePlayerData(UID);
             uidRemover(UID);
         } catch (Exception e) {
             System.out.println(e);
         }
     }
 
-    public static void deletePlayerData(User user){
-        Integer UID= Integer.valueOf(user.getUid());
+    public static void deletePlayerData(Integer UID){
         try{
             Connection con=DriverManager.getConnection(url,username,pass);
             Statement s=con.createStatement();
@@ -60,8 +58,7 @@ public class DeletionHandler {
             System.out.println(e);
         }
     }
-    public static void deleteArtifactData(User user){
-        Integer UID= Integer.valueOf(user.getUid());
+    public static void deleteArtifactData(Integer UID){
         try{
             Connection con=DriverManager.getConnection(url,username,pass);
             Statement s=con.createStatement();
@@ -71,8 +68,7 @@ public class DeletionHandler {
             System.out.println(e);
         }
     }
-    public static void deleteArtCount(User user){
-        Integer UID= Integer.valueOf(user.getUid());
+    public static void deleteArtCount(Integer UID){
         try{
             Connection con=DriverManager.getConnection(url,username,pass);
             Statement s=con.createStatement();
@@ -82,8 +78,7 @@ public class DeletionHandler {
             System.out.println(e);
         }
     }
-    public static void deleteDamage(User user){
-        Integer UID= Integer.valueOf(user.getUid());
+    public static void deleteDamage(Integer UID){
         try{
             Connection con=DriverManager.getConnection(url,username,pass);
             Statement s=con.createStatement();

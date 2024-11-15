@@ -235,4 +235,27 @@ public class DatabaseCalls {
             }
         }
     }
+    public static void printUserData(Integer UID,User user){
+        try{
+            Connection con = DriverManager.getConnection(url, username, pass);
+            Statement s = con.createStatement();
+            System.out.println("UID: "+ UID);
+            try {
+                System.out.println("Username: "+user.getPlayerInfo().getNickname());
+            } catch (Exception e) {
+                System.out.println("No Username");
+            }
+            ResultSet RS=s.executeQuery("select * from damage where (UID="+UID+");");
+            while(RS.next()){
+                System.out.println("Damage::::");
+                System.out.println("Collision Damage::"+RS.getDouble("CD"));
+                System.out.println("Elemental Skill Damage::"+RS.getDouble("E"));
+                System.out.println("Low Plunge Damage::"+RS.getDouble("LP"));
+                System.out.println("High Plunge Damage::"+RS.getDouble("HP"));
+                System.out.println("Damage Per Rotation::"+RS.getDouble("DPR"));
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
 }
