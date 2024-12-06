@@ -12,8 +12,7 @@ import java.util.Map;
 import java.util.Objects;
 
 import static java.lang.Math.clamp;
-import static org.genshin.repository.DatabaseCalls.batchInsert;
-import static org.genshin.repository.DatabaseCalls.initialInsert;
+import static org.genshin.repository.DatabaseCalls.*;
 import static org.genshin.repository.DeletionHandler.wipePlayers;
 
 public class Controller {
@@ -28,6 +27,11 @@ public class Controller {
 //        wipePlayers(XiaoMainUserMap);
         batchInsert(XiaoMainUserMap);
 //        initialInsert(XiaoMainUserMap.get(809949310));
+    }
+
+    public static void userDetailPrintHandler(Integer uid){
+        User user = Mapper.userMapper("/Users/mohammedmusthaqasimshaik/IdeaProjects/ProjectXiao/JavaCBP04/src/main/java/org/genshin/assets/UserJSONs/"+uid+".json");
+        printUserData(uid, user);
     }
 
     public static String deHasher(Long hashCode){

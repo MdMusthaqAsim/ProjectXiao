@@ -55,11 +55,34 @@ public class UidJsonFetcher {
                     String fileURLX = fileURL + uid;
                     JsonToFileWriter.saveURLContentToFile(fileURLX, saveDirX);
                 } catch (IOException e) {
-                    throw new RuntimeException(e);
+                    System.out.println(e);
+                    ;
+                } catch (Exception e) {
+                    System.err.println(e);
                 }
             }
         }
         uidListFileWriter(uidList);
         return uidList;
+    }
+
+    public static void jsonFetcher(Integer uid){
+        ArrayList<Integer> uidList = returnUidListFromFile();
+
+        String saveDir = "/Users/mohammedmusthaqasimshaik/IdeaProjects/ProjectXiao/JavaCBP04/src/main/java/org/genshin/assets/UserJSONs/";
+        String fileURL = "https://enka.network/api/uid/";
+
+        try {
+            String saveDirX = saveDir + uid + ".json";
+            String fileURLX = fileURL + uid;
+            JsonToFileWriter.saveURLContentToFile(fileURLX, saveDirX);
+        } catch (IOException e) {
+            System.out.println(e);
+        } catch (Exception e) {
+            System.err.println(e);
+        }
+
+        uidList.add(uid);
+        uidListFileWriter(uidList);
     }
 }
