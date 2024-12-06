@@ -1,12 +1,15 @@
 package org.genshin.repository;
 import java.sql.*;
 
+import org.genshin.mapper.Mapper;
 import org.genshin.model.*;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
 
+import static org.genshin.controller.UidJsonFetcher.jsonFetcher;
 import static org.genshin.service.Controller.FFXXiaoDps;
 import static org.genshin.service.Controller.deHasher;
 
@@ -53,6 +56,19 @@ public class DatabaseCalls {
         con.close();
     }
 
+    public static void insertNewPlayer(Integer uid){
+        try {
+            jsonFetcher(uid);
+            User user = Mapper.userMapper("/Users/mohammedmusthaqasimshaik/IdeaProjects/ProjectXiao/JavaCBP04/src/main/java/org/genshin/assets/UserJSONs/"+uid+".json");
+            Map<Integer, User> newUserMap = new HashMap<>();
+            newUserMap.put(uid, user);
+            batchInsert(newUserMap);
+            System.out.println("User ["+uid+"] inserted");
+        } catch (Exception e) {
+            System.out.println("Error while inserting new user");
+        }
+    }
+
     public static void batchInsert(Map<Integer, User> XiaoMainUserMap){
         for (Integer key : XiaoMainUserMap.keySet()){
             User user = XiaoMainUserMap.get(key);
@@ -61,6 +77,7 @@ public class DatabaseCalls {
             }
         }
     }
+
     public static void initialInsert(User user) {
         if (user.getAvatarInfoList() != null) {
             try {
@@ -76,6 +93,7 @@ public class DatabaseCalls {
             }
         }
     }
+
     public static void playerDataInsert(User user) throws SQLException {
         Integer UID= Integer.parseInt((user.getUid()));
         Integer characterID=1021947690;
@@ -105,6 +123,7 @@ public class DatabaseCalls {
             System.out.println("["+UID+"] : "+e);
         }
     }
+
     public static void artifactDataInsert(User user){
         Integer UID= Integer.valueOf((user.getUid()));
         Integer characterID=1021947690;
@@ -164,6 +183,7 @@ public class DatabaseCalls {
             }
         }
     }
+
     public static void artCountInsert(User user){
         Integer UID= Integer.valueOf((user.getUid()));
         Integer characterID=1021947690;
@@ -183,6 +203,7 @@ public class DatabaseCalls {
             ;
         }
     }
+
     public static SetEffect getSetEffect(User user){
         Integer UID= Integer.valueOf((user.getUid()));
         Integer characterID=1021947690;
@@ -214,6 +235,7 @@ public class DatabaseCalls {
         }
         return null;
     }
+
     public static void damageInsert(Damage damage){
         if (damage!=null) {
             Integer UID= damage.getUid();
@@ -235,6 +257,7 @@ public class DatabaseCalls {
             }
         }
     }
+
     public static void printUserData(Integer UID,User user){
         try{
             Connection con = DriverManager.getConnection(url, username, pass);

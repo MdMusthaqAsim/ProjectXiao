@@ -1,10 +1,16 @@
 package org.genshin;
 
+import org.genshin.mapper.Mapper;
+import org.genshin.model.User;
 import org.genshin.service.Controller;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Scanner;
 
-import static org.genshin.repository.DatabaseCalls.fetchTopPlayers;
+import static org.genshin.controller.UidJsonFetcher.jsonFetcher;
+import static org.genshin.repository.DatabaseCalls.*;
+import static org.genshin.repository.DeletionHandler.deleteEntirePlayer;
 import static org.genshin.service.Controller.userDetailPrintHandler;
 
 public class Main {
@@ -20,11 +26,14 @@ public class Main {
             System.out.println("2. Marechaussee Hunter Ranking");
             System.out.println("3. Vermillion Hereafter Ranking");
             System.out.println("4. Print user data");
+            System.out.println("5. Delete user data");
+            System.out.println("6. Insert new player data");
+            System.out.println("7. Update player data");
 
             System.out.println("0. Exit");
             System.out.print("Option: ");
             leaderboardOption = inp.nextInt();
-            while (leaderboardOption < 0 || leaderboardOption > 4) {
+            while (leaderboardOption < 0 || leaderboardOption > 7) {
                 System.out.println("Invalid option");
                 System.out.print("Option: ");
                 leaderboardOption = inp.nextInt();
@@ -45,10 +54,24 @@ public class Main {
                     limitOption = inp.nextInt();
                     fetchTopPlayers(limitOption, "Vermillion Hereafter");
                 } else if(leaderboardOption == 4){
-                    System.out.println("Enter UID");
+                    System.out.print("Enter UID: ");
                     Integer uid = inp.nextInt();
                     userDetailPrintHandler(uid);
-                } 
+                } else if (leaderboardOption == 5) {
+                    System.out.print("Enter UID: ");
+                    Integer uid = inp.nextInt();
+                    deleteEntirePlayer(uid);
+                } else if (leaderboardOption == 6) {
+                    System.out.print("Enter UID: ");
+                    Integer uid = inp.nextInt();
+                    insertNewPlayer(uid);
+                } else if (leaderboardOption == 7) {
+                    System.out.print("Enter UID: ");
+                    Integer uid = inp.nextInt();
+                    deleteEntirePlayer(uid);
+                    insertNewPlayer(uid);
+                    userDetailPrintHandler(uid);
+                }
             }
         }while(leaderboardOption != 0);
     }

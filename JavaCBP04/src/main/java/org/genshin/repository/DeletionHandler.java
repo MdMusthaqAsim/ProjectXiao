@@ -43,6 +43,7 @@ public class DeletionHandler {
             deleteArtifactData(UID);
             deletePlayerData(UID);
             uidRemover(UID);
+            System.out.println("User ["+UID+"] deleted");
         } catch (Exception e) {
             System.out.println(e);
         }
